@@ -42,3 +42,6 @@ APKSIGNER=$(dirname "$(which keytool)")/apksigner
 [ -x "$APKSIGNER" ] || APKSIGNER=apksigner
 "$APKSIGNER" sign --ks "$KS" --ks-pass pass:android --out "$APK_OUT" "$WORK/unsigned.apk"
 echo "OK: $APK_OUT"
+
+# (log de fallos visible)
+trap 'echo "FALLO: revisa $WORK/decode.log y $WORK/build.log"; tail -20 "$WORK/build.log" 2>/dev/null; tail -5 "$WORK/decode.log" 2>/dev/null' ERR

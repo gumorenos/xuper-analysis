@@ -93,7 +93,7 @@ IDENTITY = {
     "loginType": "2",
     "appLanguage": "es",
     "apkVersion": "43476",
-    "sysVersion": "2026-10-18 10:23:33_34_14_unknown",
+    "sysVersion": "2025-11-06 18:02:55_34_14_5.15.170-android14-11-maybe-dirty",
     "appId": "com.android.msandroid",
     "hardwareInfo": "amlogic",
     "model": "B866VH",

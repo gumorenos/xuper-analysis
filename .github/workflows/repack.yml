@@ -18,19 +18,20 @@ jobs:
           java-version: "17"
       - name: Setup tools
         run: |
-          curl -sfLo /tmp/apktool.jar https://bitbucket.org/nicholastay/apktool/downloads/apktool_2.9.3.jar || \
-            curl -sfLo /tmp/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
-          mkdir -p /usr/local/bin
-          curl -sfLo /usr/local/bin/aapt2 https://dl.google.com/android/repository/aapt2-8.4.1-11315950-linux.zip || true
-          unzip -o /usr/local/bin/aapt2 -d /usr/local/bin 2>/dev/null || true
-          chmod +x /usr/local/bin/aapt2 /tmp/apktool.jar 2>/dev/null || true
-          cp /tmp/apktool.jar /usr/local/bin/apktool.jar
+          set -e
+          curl -sfLo /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+          # aapt2 nativo desde Maven de Google (JAR con el binario dentro)
+          curl -sfLo /tmp/aapt2.jar https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/8.4.1-11315950/aapt2-8.4.1-11315950-linux.jar
+          mkdir -p /tmp/aapt2x && cd /tmp/aapt2x && unzip -o -q /tmp/aapt2.jar
+          cp /tmp/aapt2x/aapt2 /usr/local/bin/aapt2 && chmod +x /usr/local/bin/aapt2
+          /usr/local/bin/aapt2 version | head -1 || true
           echo "APKTOOL=/usr/local/bin/apktool.jar" >> $GITHUB_ENV
           echo "AAPT2=/usr/local/bin/aapt2" >> $GITHUB_ENV
       - name: Repack
         env:
           APK_NAME: ${{ inputs.apk_name }}
         run: |
+          set -e
           chmod +x scripts/repack.sh
           bash scripts/repack.sh "$APK_NAME" "repacked-${APK_NAME%.apk}-debug.apk"
       - uses: actions/upload-artifact@v4
