@@ -1,0 +1,159 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.uniplay.tv"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:5:5-66
+11-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:6:5-78
+12-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:6:22-76
+13    <uses-permission android:name="android.permission.WAKE_LOCK" />
+13-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:7:5-67
+13-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:7:22-65
+14
+15    <uses-feature
+15-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:9:5-86
+16        android:name="android.software.leanback"
+16-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:9:19-59
+17        android:required="false" />
+17-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:9:60-84
+18    <uses-feature
+18-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:10:5-89
+19        android:name="android.hardware.touchscreen"
+19-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:10:19-62
+20        android:required="false" />
+20-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:10:63-87
+21
+22    <permission
+22-->[androidx.core:core:1.13.1] /home/gumorenos/.gradle/caches/transforms-4/cd41fcc8f4ecfda7f7dd172172f36fbc/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+23        android:name="com.uniplay.tv.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+23-->[androidx.core:core:1.13.1] /home/gumorenos/.gradle/caches/transforms-4/cd41fcc8f4ecfda7f7dd172172f36fbc/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+24        android:protectionLevel="signature" />
+24-->[androidx.core:core:1.13.1] /home/gumorenos/.gradle/caches/transforms-4/cd41fcc8f4ecfda7f7dd172172f36fbc/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+25
+26    <uses-permission android:name="com.uniplay.tv.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+26-->[androidx.core:core:1.13.1] /home/gumorenos/.gradle/caches/transforms-4/cd41fcc8f4ecfda7f7dd172172f36fbc/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+26-->[androidx.core:core:1.13.1] /home/gumorenos/.gradle/caches/transforms-4/cd41fcc8f4ecfda7f7dd172172f36fbc/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+27
+28    <application
+28-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:12:5-34:19
+29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+29-->[androidx.core:core:1.13.1] /home/gumorenos/.gradle/caches/transforms-4/cd41fcc8f4ecfda7f7dd172172f36fbc/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+30        android:debuggable="true"
+31        android:extractNativeLibs="true"
+32        android:hardwareAccelerated="true"
+32-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:16:9-43
+33        android:label="UniPlay TV"
+33-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:13:9-35
+34        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+34-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:15:9-73
+35        android:usesCleartextTraffic="true" >
+35-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:14:9-44
+36        <activity
+36-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:18:9-28:20
+37            android:name="com.uniplay.tv.MainActivity"
+37-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:19:13-41
+38            android:exported="true"
+38-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:20:13-36
+39            android:launchMode="singleTask"
+39-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:22:13-44
+40            android:screenOrientation="landscape" >
+40-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:21:13-50
+41            <intent-filter>
+41-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:23:13-27:29
+42                <action android:name="android.intent.action.MAIN" />
+42-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:24:17-68
+42-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:24:25-66
+43
+44                <category android:name="android.intent.category.LAUNCHER" />
+44-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:25:17-76
+44-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:25:27-74
+45                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+45-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:26:17-85
+45-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:26:27-83
+46            </intent-filter>
+47        </activity>
+48        <activity
+48-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:30:9-33:39
+49            android:name="com.uniplay.tv.PlayerActivity"
+49-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:31:13-43
+50            android:exported="false"
+50-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:33:13-37
+51            android:screenOrientation="landscape" />
+51-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:32:13-50
+52
+53        <provider
+53-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+54            android:name="androidx.startup.InitializationProvider"
+54-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+55            android:authorities="com.uniplay.tv.androidx-startup"
+55-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+56            android:exported="false" >
+56-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+57            <meta-data
+57-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+58                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+58-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+59                android:value="androidx.startup" />
+59-->[androidx.emoji2:emoji2:1.2.0] /home/gumorenos/.gradle/caches/transforms-4/a370a0755c5e2d498c5e79cb53a84eca/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+60            <meta-data
+60-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/gumorenos/.gradle/caches/transforms-4/91c9cc6d885113a9dfc45f034dc4c478/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+61                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+61-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/gumorenos/.gradle/caches/transforms-4/91c9cc6d885113a9dfc45f034dc4c478/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+62                android:value="androidx.startup" />
+62-->[androidx.lifecycle:lifecycle-process:2.6.2] /home/gumorenos/.gradle/caches/transforms-4/91c9cc6d885113a9dfc45f034dc4c478/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+63            <meta-data
+63-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+64                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+64-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+65                android:value="androidx.startup" />
+65-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+66        </provider>
+67
+68        <receiver
+68-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+69            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+69-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+70            android:directBootAware="false"
+70-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+71            android:enabled="true"
+71-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+72            android:exported="true"
+72-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+73            android:permission="android.permission.DUMP" >
+73-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+74            <intent-filter>
+74-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+75                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+75-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+75-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+76            </intent-filter>
+77            <intent-filter>
+77-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+78                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+78-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+78-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+79            </intent-filter>
+80            <intent-filter>
+80-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+81                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+81-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+81-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+82            </intent-filter>
+83            <intent-filter>
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+84                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] /home/gumorenos/.gradle/caches/transforms-4/5e5b5a04ee48fc7f5e9c8ca4d6ebb01e/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+85            </intent-filter>
+86        </receiver>
+87    </application>
+88
+89</manifest>
