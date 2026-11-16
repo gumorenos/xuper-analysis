@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
             layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 0).weight(1f)
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
         }
         root.addView(title); root.addView(recycler)
         setContentView(ScrollView(this).apply { addView(root) })

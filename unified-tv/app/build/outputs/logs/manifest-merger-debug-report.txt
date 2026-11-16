@@ -107,7 +107,7 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/gumorenos/.gradle/cac
 	android:hardwareAccelerated
 		ADDED from /home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:16:9-43
 	android:theme
-		ADDED from /home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:15:9-73
+		ADDED from /home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:15:9-59
 	android:usesCleartextTraffic
 		ADDED from /home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:14:9-44
 activity#com.uniplay.tv.MainActivity

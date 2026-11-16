@@ -52,8 +52,8 @@
 32-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:16:9-43
 33        android:label="UniPlay TV"
 33-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:13:9-35
-34        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-34-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:15:9-73
+34        android:theme="@style/Theme.AppCompat.NoActionBar"
+34-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:15:9-59
 35        android:usesCleartextTraffic="true" >
 35-->/home/gumorenos/xuper-repo/unified-tv/app/src/main/AndroidManifest.xml:14:9-44
 36        <activity

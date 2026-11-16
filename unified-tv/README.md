@@ -42,3 +42,12 @@ unified-tv/
 - Respuesta = `{"returnCode","errorMessage","data":"<hex>"}`; `data` se descifra igual
 - Headers: `apk`, `apkVer`, `spkgVer`; identidad: loginType=2, appLanguage, apkVersion, sysVersion, appId, hardwareInfo, model, product, cpu, B29(serial cifrado), reserve1(MAC gateway cifrada), portalCode, deviceToken, sn, drmId, sdkVer
 - Referencia Python funcional: `tools/portal_client.py`
+
+## Notas de build en Raspberry Pi (ARM64)
+
+- El aapt2 de Google es x86; se ejecuta vía `qemu-x86_64-static` con sysroot amd64
+  (`tools/aapt2shim.c` → compila a `aapt2dir/aapt2`, binario shim nativo que lanza qemu).
+  Requiere: `libc6-amd64-cross` + `libgcc-s1/libstdc++6/zlib1g` amd64 extraídos a
+  `/usr/x86_64-linux-gnu/{lib,lib64}`.
+- Alternativa: CI en GitHub Actions (`.github/workflows/android.yml`) — push a master con
+  cambios en unified-tv/ dispara el build y sube el APK como artefacto.
