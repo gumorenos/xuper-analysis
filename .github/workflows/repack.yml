@@ -1,0 +1,39 @@
+name: repack
+
+on:
+  workflow_dispatch:
+    inputs:
+      apk_name:
+        description: "Nombre del APK en el repo (raíz) a repackear"
+        default: "wiwyxuper.apk"
+
+jobs:
+  repack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Setup tools
+        run: |
+          curl -sfLo /tmp/apktool.jar https://bitbucket.org/nicholastay/apktool/downloads/apktool_2.9.3.jar || \
+            curl -sfLo /tmp/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+          mkdir -p /usr/local/bin
+          curl -sfLo /usr/local/bin/aapt2 https://dl.google.com/android/repository/aapt2-8.4.1-11315950-linux.zip || true
+          unzip -o /usr/local/bin/aapt2 -d /usr/local/bin 2>/dev/null || true
+          chmod +x /usr/local/bin/aapt2 /tmp/apktool.jar 2>/dev/null || true
+          cp /tmp/apktool.jar /usr/local/bin/apktool.jar
+          echo "APKTOOL=/usr/local/bin/apktool.jar" >> $GITHUB_ENV
+          echo "AAPT2=/usr/local/bin/aapt2" >> $GITHUB_ENV
+      - name: Repack
+        env:
+          APK_NAME: ${{ inputs.apk_name }}
+        run: |
+          chmod +x scripts/repack.sh
+          bash scripts/repack.sh "$APK_NAME" "repacked-${APK_NAME%.apk}-debug.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repacked-apk
+          path: repacked-*.apk
