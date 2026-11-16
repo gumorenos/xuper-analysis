@@ -21,7 +21,7 @@ jobs:
       - name: Setup tools
         run: |
           set -e
-          curl -sfLo /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar
+          curl -sfLo /usr/local/bin/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_3.0.3.jar
           # aapt2 nativo desde Maven de Google (JAR con el binario dentro)
           curl -sfLo /tmp/aapt2.jar https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/8.4.1-11315950/aapt2-8.4.1-11315950-linux.jar
           mkdir -p /tmp/aapt2x && cd /tmp/aapt2x && unzip -o -q /tmp/aapt2.jar
