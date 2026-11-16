@@ -73,17 +73,34 @@ def hexdec(s):  # fc.a.b
         s = "0" + s
     return binascii.unhexlify(s).decode("utf-8", "replace")
 
+BRANDKEY = dc_b64("combrasiltvaslgklxckbcombrasiltv")  # 24 bytes exactos
+
+def brand_encrypt(plain: str) -> str:
+    """j.d() = fc.b.b: 3DES/ECB/PKCS5 -> b64 -> hex (chars)."""
+    ct = des3_bytes(False, pad(plain.encode()))
+    return hexenc(base64.b64encode(ct))
+
+def des3_bytes(decrypt, data):
+    key = BRANDKEY
+    args = ["openssl", "des-ede3", "-K", key.hex(), "-nosalt"]
+    args += (["-d", "-nopad"] if decrypt else ["-e"])
+    p = subprocess.run(args, input=data, capture_output=True)
+    if p.returncode != 0:
+        raise RuntimeError(p.stderr.decode()[:200])
+    return p.stdout
+
 IDENTITY = {
     "loginType": "2",
     "appLanguage": "es",
     "apkVersion": "43476",
     "sysVersion": "2026-10-18 10:23:33_34_14_unknown",
     "appId": "com.android.msandroid",
-    "hardwareInfo": "unknown",
+    "hardwareInfo": "amlogic",
     "model": "B866VH",
     "product": "B866VH",
-    "os": "d0:ea:11:a7:e8:16",
-    "reserve1": "",
+    "cpu": "armeabi-v7a",
+    "B29": brand_encrypt("ZTEATV45503609797"),
+    "reserve1": brand_encrypt("d0ea11a7e816"),
     "portalCode": "568e194f-d170-4369-96e8-4a457f641880",
     "deviceToken": "",
     "sn": SN,
