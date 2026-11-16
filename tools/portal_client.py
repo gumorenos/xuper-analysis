@@ -1,20 +1,53 @@
 #!/usr/bin/env python3
-"""Cliente de prueba del protocolo portalCore (coolx) — build WiwyXuper v4.34.4.
+"""Cliente del protocolo portalCore (coolx) — build WiwyXuper v4.34.4.
 
-Esquema (verificado en código):
-  - clave runtime = b64decode(PORTAL_KEY_del_manifiesto)[:24]  (3DES/ECB/PKCS5)
-  - request:  body JSON -> 3DES-ECB -> hex -> {"data": <hex>, "len": <len(json original)>}
-  - response: {"returnCode","errorMessage","data": <hex>} -> data se descifra igual
+Receta (verificada en zb/c.java + zb/b.java + fc/b.java):
+  Body  = JSON(bean) + campos de identidad (zb.b.a())
+        -> 3DES/ECB/PKCS5 con clave runtime -> HEX (el body completo va cifrado)
+  Respuesta = {"returnCode","errorMessage","data":"<hex>"}; "data" se descifra igual.
+  Clave runtime = b64decode(PORTAL_KEY_hex_del_manifest)[:24]
+  (el formato {"data","len"} era del sistema de descargas, NO del portal)
 """
-import base64, json, subprocess, sys
+import base64, binascii, json, subprocess, sys, urllib.request
 
 PORTAL = "https://fuxok.nguvmqhpk.com"
 PORTAL_KEY_HEX = "346f53476b586674612b4b66324e497a6f726863434832554f6c37597433615275667a582f6e556b634f4b3538304f2b3748567573673d3d"
+SN = "cfe73e0cc6159eb1e97fc5ae62124029"  # SN del box (registrado en el portal)
+# PORTAL_KEY descifra (3DES/ECB, clave estática *&@!6d5d...) a la UUID del build:
+BUILD_UUID = "568e194f-d170-4369-96e8-4a457f641880"
+PORTALCODE = BUILD_UUID  # valor enviado como portalCode (candidato)
+
+_TBL = {}
+_alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+for _i, _c in enumerate(_alpha):
+    _TBL[ord(_c)] = _i
+
+def dc_b64(s):
+    """Replica del decoder base64 del APK (dc.a): átomos de 4; inválidos -> -1; '=' encoge."""
+    out = bytearray(); i = 0
+    while i < len(s):
+        atom = s[i:i+4]; i += 4
+        if len(atom) < 2: break
+        size = len(atom)
+        if size > 3 and atom[3] == "=": size = 3
+        if size > 2 and atom[2] == "=": size = 2
+        v = [_TBL.get(ord(ch), -1) for ch in atom]
+        v0, v1, v2, v3 = v
+        def sh(x, k): return (x << k) & 0xFF
+        def m1(x): return 0xFF if x < 0 else x
+        out.append((sh(m1(v0), 2) & 0xFC) | (3 if v1 < 0 else (v1 >> 4) & 3))
+        if size >= 3:
+            out.append((sh(m1(v1), 4) & 0xF0) | (15 if v2 < 0 else (v2 >> 2) & 15))
+        if size >= 4:
+            out.append((sh(m1(v2), 6) & 0xC0) | (63 if v3 < 0 else v3 & 63))
+    return bytes(out)
 
 def runtime_key():
-    return base64.b64decode(PORTAL_KEY_HEX)[:24]
+    # clave runtime = decodificador del APK sobre la UUID del build
+    return dc_b64(BUILD_UUID)[:24]
 
-def des3(decrypt: bool, data: bytes, key: bytes):
+def des3(decrypt, data):
+    key = runtime_key()
     args = ["openssl", "des-ede3", "-K", key.hex(), "-nosalt"]
     args += (["-d", "-nopad"] if decrypt else ["-e"])
     p = subprocess.run(args, input=data, capture_output=True)
@@ -22,56 +55,71 @@ def des3(decrypt: bool, data: bytes, key: bytes):
         raise RuntimeError(p.stderr.decode()[:200])
     return p.stdout
 
-def pkcs5_pad(b):
+def pad(b):
     n = 8 - (len(b) % 8)
     return b + bytes([n]) * n
 
-def pkcs5_unpad(b):
+def unpad(b):
     if not b:
         return b
     n = b[-1]
     return b[:-n] if 1 <= n <= 8 and b[-n:] == bytes([n]) * n else b
 
-def encrypt_payload(obj) -> dict:
-    key = runtime_key()
-    js = json.dumps(obj, separators=(",", ":"), ensure_ascii=False).encode()
-    ct = des3(False, pkcs5_pad(js), key)
-    return {"data": ct.hex(), "len": len(js)}
+def hexenc(b):  # fc.a.c
+    return ''.join(f"{c:02x}" for c in b)
 
-def decrypt_data(hexdata) -> str:
-    key = runtime_key()
-    if len(hexdata) % 2:
-        hexdata = "0" + hexdata
-    raw = bytes.fromhex(hexdata)
-    pt = des3(True, raw, key)
-    return pkcs5_unpad(pt).decode(errors="replace")
+def hexdec(s):  # fc.a.b
+    if len(s) % 2:
+        s = "0" + s
+    return binascii.unhexlify(s).decode("utf-8", "replace")
 
-def call(endpoint, payload_obj, method="POST"):
-    import urllib.request
-    body = json.dumps(encrypt_payload(payload_obj)).encode()
+IDENTITY = {
+    "loginType": "2",
+    "appLanguage": "es",
+    "apkVersion": "43476",
+    "sysVersion": "2026-10-18 10:23:33_34_14_unknown",
+    "appId": "com.android.msandroid",
+    "hardwareInfo": "unknown",
+    "model": "B866VH",
+    "product": "B866VH",
+    "os": "d0:ea:11:a7:e8:16",
+    "reserve1": "",
+    "portalCode": "568e194f-d170-4369-96e8-4a457f641880",
+    "deviceToken": "",
+    "sn": SN,
+    "drmId": "",
+    "sdkVer": 34,
+}
+
+def call(endpoint, payload=None):
+    body_obj = dict(payload or {})
+    body_obj.update(IDENTITY)
+    js = json.dumps(body_obj, separators=(",", ":"), ensure_ascii=False).encode()
+    ct = des3(False, pad(js))
     req = urllib.request.Request(
-        f"{PORTAL}{endpoint}", data=body, method=method,
-        headers={"Content-Type": "application/json;charset=utf-8",
-                 "Cache-Control": "no-store",
-                 "apk": "com.android.msandroid",
-                 "apkVer": "43404",
-                 "spkgVer": "2026-10-18 10:23:33_34_14_unknown",
-                 "User-Agent": "okhttp/4.9.3"})
+        PORTAL + endpoint, data=hexenc(ct).encode(), method="POST",
+        headers={
+            "Content-Type": "application/json;charset=utf-8",
+            "apk": "com.android.msandroid",
+            "apkVer": "43404",
+            "spkgVer": IDENTITY["sysVersion"],
+            "User-Agent": "okhttp/4.9.3",
+        })
     with urllib.request.urlopen(req, timeout=20) as r:
         resp = json.loads(r.read().decode())
     out = dict(resp)
-    if resp.get("data"):
+    d = resp.get("data")
+    if isinstance(d, str) and d:
         try:
-            out["data_decrypted"] = json.loads(decrypt_data(resp["data"]))
+            out["data_decrypted"] = json.loads(unpad(des3(True, hexdec(d).encode())))
         except Exception as e:
             out["data_decrypted_err"] = str(e)
-            out["data_decrypted_raw"] = decrypt_data(resp["data"])[:400]
     return out
 
 if __name__ == "__main__":
-    ep = sys.argv[1] if len(sys.argv) > 1 else "/api/portalCore/config/get"
+    ep = sys.argv[1] if len(sys.argv) > 1 else "/api/portalCore/getBaseTime"
     payload = json.loads(sys.argv[2]) if len(sys.argv) > 2 else {}
     try:
-        print(json.dumps(call(ep, payload), ensure_ascii=False, indent=1)[:3000])
+        print(json.dumps(call(ep, payload), ensure_ascii=False, indent=1)[:2500])
     except Exception as e:
         print("ERROR:", e)
