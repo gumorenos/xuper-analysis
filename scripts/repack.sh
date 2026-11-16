@@ -29,6 +29,10 @@ cat > "$WORK/apk/res/xml/network_security_config.xml" <<'XML'
 </network-security-config>
 XML
 
+# renombrar recursos con $ (aapt2 no los acepta)
+find "$WORK/apk/res" -name '*$*' -exec bash -c 'mv "$1" "${1//\$/d_}"' _ {} \; 2>/dev/null || true
+grep -rl '\$' "$WORK/apk/res" --include='*.xml' | xargs -r sed -i 's/\$avd/d_avd/g; s/\$ic_launcher/d_ic_launcher/g' || true
+
 echo "[3/4] rebuild (aapt2 nativo)"
 java -jar "$APKTOOL" b --aapt "$AAPT2" "$WORK/apk" -o "$WORK/unsigned.apk" 2>&1 | tail -5
 
@@ -37,9 +41,10 @@ KS="$WORK/debug.keystore"
 [ -f "$KS" ] || keytool -genkeypair -keystore "$KS" -alias debug -storepass android \
     -keypass android -dname "CN=Android Debug,O=UniPlay,C=US" \
     -keyalg RSA -keysize 2048 -validity 10000 2>/dev/null
-JDIR=$(dirname "$(readlink -f "$(which keytool)")")
-APKSIGNER="$JDIR/apksigner"
+APKSIGNER=$(find "${ANDROID_HOME:-/usr/lib/android-sdk}/build-tools" -name apksigner 2>/dev/null | sort | tail -1)
+[ -x "$APKSIGNER" ] || APKSIGNER=$(dirname "$(readlink -f "$(which keytool)")")/apksigner
 [ -x "$APKSIGNER" ] || APKSIGNER=apksigner
+echo "apksigner: $APKSIGNER"
 "$APKSIGNER" sign --ks "$KS" --ks-pass pass:android --out "$APK_OUT" "$WORK/unsigned.apk"
 ls -la "$APK_OUT"
 echo "OK: $APK_OUT"
