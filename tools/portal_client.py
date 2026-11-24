@@ -122,7 +122,7 @@ def call(endpoint, payload=None):
             "apkVer": "43404",
             "spkgVer": "2025-11-06 18:02:55_34_14_",
             "NoLog": "true",
-            "User-Agent": "okhttp/4.9.3",
+            "User-Agent": "okhttp/3.12.12",
         })
     with urllib.request.urlopen(req, timeout=20) as r:
         resp = json.loads(r.read().decode())

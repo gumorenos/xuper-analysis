@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uniplay.tv.model.Channel
 import com.uniplay.tv.source.CatalogSource
 import com.uniplay.tv.source.DirectSource
+import com.uniplay.tv.source.LiveSource
 import com.uniplay.tv.source.Source
 import android.widget.Toast
 import kotlinx.coroutines.*
@@ -21,7 +22,7 @@ import kotlinx.coroutines.*
 class MainActivity : AppCompatActivity() {
 
     private val sources: List<Source> by lazy {
-        listOf(DirectSource(), CatalogSource(this))  // + M3uSource(url) + CoolxSource(...)
+        listOf(DirectSource(), LiveSource(this), CatalogSource(this))  // + M3uSource(url)
     }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private lateinit var adapter: ChannelAdapter
