@@ -148,34 +148,15 @@ if "WXCALL" not in s:
         print("patched WXCALL (head)")
 
 if "WXRESP2" not in s:
-    anchor = "    if-nez v1, :cond_1\n    return-object v0\n"
-    inj = """    if-nez v1, :cond_1
-    const-string v1, "WXRESP2"
-    const-wide/16 v1, 0x10000
-    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;
-    move-result-object v1
-    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;
-    move-result-object v1
-    const-string v2, "WXRESP2"
-    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    return-object v0
-"""
-    if anchor not in s:
-        print("anchor resp no encontrado; sin WXRESP2")
+    import re as _re
+    pat = _re.compile(r"(    if-nez v1, :cond_1\n)(\n    \.line \d+\n)+(\n?    return-object v0\n)")
+    m = pat.search(s)
+    if not m:
+        print("anchor resp (regex) no encontrado; sin WXRESP2")
     else:
-        # nota: v1/v2 se sobreescriben, el par largo va en v1,v2
-        inj2 = """    if-nez v1, :cond_1
-    const-wide/16 v1, 0x10000
-    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;
-    move-result-object v1
-    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;
-    move-result-object v1
-    const-string v2, "WXRESP2"
-    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    return-object v0
-"""
-        s = s.replace(anchor, inj2, 1)
-        print("patched WXRESP2")
+        inj = "    const-wide/16 v1, 0x10000\n    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;\n    move-result-object v1\n    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;\n    move-result-object v1\n    const-string v2, \"WXRESP2\"\n    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n"
+        s = s[:m.end(1)] + inj + s[m.end(1):]
+        print("patched WXRESP2 (regex)")
 
 open(p, "w").write(s)
 EOF
