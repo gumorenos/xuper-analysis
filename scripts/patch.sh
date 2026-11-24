@@ -26,12 +26,8 @@ else:
 
 # --- Patch 2: WXURL (log de la request en el inicio de intercept) ---
 if "WXURL" not in s:
-    marker = """    .line 1
-    const-string v0, "userId"
-    .line 2
-"""
-    injected = """    .line 1
-    invoke-interface {p1}, Lokhttp3/Interceptor$Chain;->request()Lokhttp3/Request;
+    marker = "    const-string v0, \"userId\"\n"
+    injected = """    invoke-interface {p1}, Lokhttp3/Interceptor$Chain;->request()Lokhttp3/Request;
     move-result-object v8
     invoke-virtual {v8}, Lokhttp3/Request;->url()Lokhttp3/HttpUrl;
     move-result-object v8
@@ -40,13 +36,12 @@ if "WXURL" not in s:
     const-string v7, "WXURL"
     invoke-static {v7, v8}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
     const-string v0, "userId"
-    .line 2
 """
     i = s.find(".method public intercept(Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;")
     j = s.find(".end method", i)
     seg = s[i:j]
     if marker not in seg:
-        print("patron no encontrado en intercept; abort url"); sys.exit(1)
+        print("patron no encontrado en intercept; continuo solo con WXBODY")
     seg = seg.replace(marker, injected, 1)
     s = s[:i] + seg + s[j:]
     print("patched WXURL")
