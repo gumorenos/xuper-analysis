@@ -64,19 +64,22 @@ if "WXRESP" not in s:
     anchor = "    invoke-interface {p1, v1}, Lokhttp3/Interceptor$Chain;->proceed(Lokhttp3/Request;)Lokhttp3/Response;"
     k = seg.find(anchor)
     if k != -1:
-        k2 = seg.find("move-result-object p1", k)
-        end = k2 + len("move-result-object p1")
-        inj = """
+        kt = seg.find(":try_end_", k)
+        if kt == -1:
+            print("try_end no encontrado; sin WXRESP")
+        else:
+            inj = """
     const-wide/16 v3, 0x10000
     invoke-virtual {p1, v3, v4}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;
     move-result-object v3
     invoke-virtual {v3}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;
     move-result-object v3
     const-string v4, "WXRESP"
-    invoke-static {v4, v3}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I"""
-        seg = seg[:end] + inj + seg[end:]
-        s = s[:i] + seg + s[j:]
-        print("patched WXRESP")
+    invoke-static {v4, v3}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+"""
+            seg = seg[:kt] + inj + seg[kt:]
+            s = s[:i] + seg + s[j:]
+            print("patched WXRESP (antes de try_end)")
     else:
         print("proceed no encontrado; sin WXRESP")
 else:
