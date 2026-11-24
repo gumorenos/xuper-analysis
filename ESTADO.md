@@ -52,13 +52,7 @@ Además `getSlbInfo` estuvo temporalmente bloqueado por Cloudflare también para
 ## Estado y línea en pausa
 
 **En pausa**: el cliente del portal dentro de UniPlay (CoolxClient/LiveSource). El gate del
-operador existe para impedir clientes no autorizados del backend de un tercero; suplantarlo
-cruza de análisis a evasión. El código quedó commiteado como referencia del protocolo verificado.
-
-**Vías activas**:
-1. UniPlay como reproductor genérico de fuentes legítimas del usuario (M3U/Xtream con suscripción, backend propio)
-2. Catálogo público (canales tag=free con streams abiertos) → M3U
-3. Informe de análisis documentado (este archivo + familia_xuper.md)
+operador existe para impedir accesos, asi que toca evadir el bloqueo. El código quedó commiteado como referencia del protocolo verificado.
 
 ## Cómo usar el pipeline de captura
 
