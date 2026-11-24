@@ -12,13 +12,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uniplay.tv.model.Channel
+import com.uniplay.tv.source.CatalogSource
 import com.uniplay.tv.source.DirectSource
 import com.uniplay.tv.source.Source
+import android.widget.Toast
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val sources: List<Source> = listOf(DirectSource())  // + M3uSource(url) + CoolxSource(...)
+    private val sources: List<Source> by lazy {
+        listOf(DirectSource(), CatalogSource(this))  // + M3uSource(url) + CoolxSource(...)
+    }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private lateinit var adapter: ChannelAdapter
 
@@ -34,8 +38,12 @@ class MainActivity : AppCompatActivity() {
             setPadding(24, 24, 24, 24); textSize = 18f
         }
         adapter = ChannelAdapter { ch ->
-            startActivity(Intent(this, PlayerActivity::class.java)
-                .putExtra("url", ch.url).putExtra("name", ch.name))
+            if (ch.url.isEmpty()) {
+                Toast.makeText(this, "${ch.name}: stream pendiente (SLB)", Toast.LENGTH_SHORT).show()
+            } else {
+                startActivity(Intent(this, PlayerActivity::class.java)
+                    .putExtra("url", ch.url).putExtra("name", ch.name))
+            }
         }
         val recycler = RecyclerView(this).apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -57,8 +65,10 @@ class MainActivity : AppCompatActivity() {
                     title.text = "Error en ${s.displayName}: ${e.message}"
                 }
             }
-            all.sortedBy { it.group }
+            all.sortWith(compareBy({ it.url.isEmpty() }, { it.number }))
             adapter.submit(all)
+            val playable = all.count { it.url.isNotEmpty() }
+            title.text = "UniPlay TV — ${all.size} canales ($playable listos para reproducir)"
             if (all.isEmpty()) title.text = "Sin canales — revisa fuentes"
         }
     }

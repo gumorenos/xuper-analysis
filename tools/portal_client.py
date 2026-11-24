@@ -10,9 +10,9 @@ Receta (verificada en zb/c.java + zb/b.java + fc/b.java):
 """
 import base64, binascii, json, subprocess, sys, urllib.request
 
-PORTAL = "https://fuxok.nguvmqhpk.com"
+PORTAL = "http://brkhzs.udigkkrc.com"
 PORTAL_KEY_HEX = "346f53476b586674612b4b66324e497a6f726863434832554f6c37597433615275667a582f6e556b634f4b3538304f2b3748567573673d3d"
-SN = "cfe73e0cc6159eb1e97fc5ae62124029"  # SN del box (registrado en el portal)
+SN = "c05fdf3595ba2ec9f49486f20a72ef06"  # SN del box (registrado en el portal)
 # PORTAL_KEY descifra (3DES/ECB, clave estática *&@!6d5d...) a la UUID del build:
 BUILD_UUID = "568e194f-d170-4369-96e8-4a457f641880"
 PORTALCODE = BUILD_UUID  # valor enviado como portalCode (candidato)
@@ -101,7 +101,7 @@ IDENTITY = {
     "cpu": "armeabi-v7a",
     "B29": brand_encrypt("ZTEATV45503609797"),
     "reserve1": brand_encrypt("d0ea11a7e816"),
-    "portalCode": "568e194f-d170-4369-96e8-4a457f641880",
+    "portalCode":"masnew",
     "deviceToken": "",
     "sn": SN,
     "drmId": "",
@@ -118,7 +118,7 @@ def call(endpoint, payload=None):
         headers={
             "Content-Type": "application/json;charset=utf-8",
             "apk": "com.android.msandroid",
-            "apkVer": "43404",
+            "apkVer": "43476",
             "spkgVer": IDENTITY["sysVersion"],
             "User-Agent": "okhttp/4.9.3",
         })
