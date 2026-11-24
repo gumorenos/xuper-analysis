@@ -15,7 +15,9 @@ jobs:
           distribution: temurin
           java-version: "17"
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        run: |
+          sdkmanager --list-installed | head -3 || true
+          echo "ANDROID_HOME=$ANDROID_HOME"
       - name: Setup Gradle 8.7
         run: |
           curl -sfLo /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip

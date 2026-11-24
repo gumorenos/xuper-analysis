@@ -10,7 +10,7 @@ Receta (verificada en zb/c.java + zb/b.java + fc/b.java):
 """
 import base64, binascii, json, subprocess, sys, urllib.request
 
-PORTAL = "http://brkhzs.udigkkrc.com"
+PORTAL = "https://brkhzs.udigkkrc.com"
 PORTAL_KEY_HEX = "346f53476b586674612b4b66324e497a6f726863434832554f6c37597433615275667a582f6e556b634f4b3538304f2b3748567573673d3d"
 SN = "c05fdf3595ba2ec9f49486f20a72ef06"  # SN del box (registrado en el portal)
 # PORTAL_KEY descifra (3DES/ECB, clave estática *&@!6d5d...) a la UUID del build:
