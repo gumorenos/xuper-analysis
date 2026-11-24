@@ -37,12 +37,6 @@ if "WXURL" not in s:
     move-result-object v8
     const-string v7, "WXURL"
     invoke-static {v7, v8}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    invoke-virtual {v8}, Lokhttp3/Request;->headers()Lokhttp3/Headers;
-    move-result-object v8
-    invoke-virtual {v8}, Lokhttp3/Headers;->toString()Ljava/lang/String;
-    move-result-object v8
-    const-string v7, "WXHDR"
-    invoke-static {v7, v8}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
     const-string v0, "userId"
 """
     i = s.find(".method public intercept(Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;")
@@ -53,7 +47,7 @@ if "WXURL" not in s:
     else:
         seg = seg.replace(marker, injected, 1)
         s = s[:i] + seg + s[j:]
-        print("patched WXURL+WXHDR")
+        print("patched WXURL")
 else:
     print("WXURL ya presente")
 
