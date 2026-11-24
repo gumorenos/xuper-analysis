@@ -107,3 +107,29 @@ else:
 
 open(p, "w").write(s)
 EOF
+
+# --- fc/b.smali: log de descifrado de respuestas (WXDECIN/KEY/OUT) ---
+F2="$APK/smali/fc/b.smali"
+[ -f "$F2" ] || exit 0
+
+python3 - "$F2" <<'EOF'
+import sys
+p = sys.argv[1]
+s = open(p).read()
+m_head = ".method public static a(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n    .locals 2\n"
+inj_head = m_head + '    const-string v0, "WXDECIN"\n    invoke-static {v0, p0}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n    const-string v0, "WXDECKEY"\n    invoke-static {v0, p1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n'
+i = s.find(".method public static a(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;")
+j = s.find(".end method", i)
+seg = s[i:j]
+anchor_end = "    invoke-direct {p1, p0, v0}, Ljava/lang/String;-><init>([BLjava/lang/String;)V"
+k = seg.find(anchor_end)
+if k == -1:
+    print("anchor_end no match en a(); sin WXDEC"); sys.exit(0)
+kret = seg.find("return-object p1", k)
+seg2 = seg[:kret] + '    const-string v0, "WXDECOUT"\n    invoke-static {v0, p1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n' + seg[kret:]
+s = s[:i] + seg2 + s[j:]
+if "WXDECIN" not in s:
+    s = s.replace(m_head, inj_head, 1)
+open(p, "w").write(s)
+print("patched WXDEC")
+EOF
