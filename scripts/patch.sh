@@ -127,3 +127,55 @@ if "WXDECIN" not in s:
 open(p, "w").write(s)
 print("patched WXDEC")
 EOF
+
+# --- okhttp3/RealCall.smali: log de TODAS las llamadas+respuestas okhttp ---
+R="$APK/smali/okhttp3/RealCall.smali"
+[ -f "$R" ] || exit 0
+
+python3 - "$R" <<'EOF'
+import sys
+p = sys.argv[1]
+s = open(p).read()
+
+if "WXCALL" not in s:
+    m_head = ".method getResponseWithInterceptorChain()Lokhttp3/Response;\n    .locals 13\n"
+    inj_head = m_head + '    const-string v1, "WXCALL"\n    iget-object v2, p0, Lokhttp3/RealCall;->originalRequest:Lokhttp3/Request;\n    invoke-virtual {v2}, Lokhttp3/Request;->url()Lokhttp3/HttpUrl;\n    move-result-object v2\n    invoke-virtual {v2}, Lokhttp3/HttpUrl;->toString()Ljava/lang/String;\n    move-result-object v2\n    invoke-static {v1, v2}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n'
+    i = s.find(m_head)
+    if i == -1:
+        print("metodo getResponse no encontrado; sin WXCALL")
+    else:
+        s = s.replace(m_head, inj_head, 1)
+        print("patched WXCALL (head)")
+
+if "WXRESP2" not in s:
+    anchor = "    if-nez v1, :cond_1\n    return-object v0\n"
+    inj = """    if-nez v1, :cond_1
+    const-string v1, "WXRESP2"
+    const-wide/16 v1, 0x10000
+    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;
+    move-result-object v1
+    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;
+    move-result-object v1
+    const-string v2, "WXRESP2"
+    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    return-object v0
+"""
+    if anchor not in s:
+        print("anchor resp no encontrado; sin WXRESP2")
+    else:
+        # nota: v1/v2 se sobreescriben, el par largo va en v1,v2
+        inj2 = """    if-nez v1, :cond_1
+    const-wide/16 v1, 0x10000
+    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;
+    move-result-object v1
+    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;
+    move-result-object v1
+    const-string v2, "WXRESP2"
+    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    return-object v0
+"""
+        s = s.replace(anchor, inj2, 1)
+        print("patched WXRESP2")
+
+open(p, "w").write(s)
+EOF
