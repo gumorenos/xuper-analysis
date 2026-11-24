@@ -35,19 +35,6 @@ if "WXURL" not in s:
     move-result-object v8
     const-string v7, "WXURL"
     invoke-static {v7, v8}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    invoke-virtual {v8}, Ljava/lang/String;->getBytes()[B
-    move-result-object v8
-    invoke-virtual {v8}, [B->length
-    move-result v8
-    new-instance v6, Ljava/lang/StringBuilder;
-    invoke-direct {v6}, Ljava/lang/StringBuilder;-><init>()V
-    const-string v7, "URLLEN="
-    invoke-virtual {v6, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    invoke-virtual {v6, v8}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-    invoke-virtual {v6}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-    move-result-object v8
-    const-string v7, "WXURL"
-    invoke-static {v7, v8}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
     invoke-interface {p1}, Lokhttp3/Interceptor$Chain;->request()Lokhttp3/Request;
     move-result-object v8
     invoke-virtual {v8}, Lokhttp3/Request;->headers()Lokhttp3/Headers;
