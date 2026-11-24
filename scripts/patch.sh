@@ -147,26 +147,75 @@ if "WXCALL" not in s:
         s = s.replace(m_head, inj_head, 1)
         print("patched WXCALL (head)")
 
-if "WXRESP2" not in s:
-    # buscar if-nez v1, :cond_1 dentro del segmento del metodo, luego el return-object v0 siguiente
+# WXRESPX: log del body de la respuesta HTTP (JSON del portal) SIN consumir el stream.
+# okhttp 3.12.12: Response.peekBody(J) devuelve Lokhttp3/ResponseBody; (NO BufferedSource;
+# esa firma erronea causaba NoSuchMethodError en el parche anterior WXRESP2).
+# Todo va dentro de try/catch Throwable: nunca debe romper la llamada.
+if "WXRESP2" in s:
+    # limpiar el parche viejo (firma invalida) si un decode ya lo traia
+    bad = "    const-wide/32 v1, 0x10000\n    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;\n    move-result-object v1\n    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;\n    move-result-object v1\n    const-string v2, \"WXRESP2\"\n    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n"
+    s = s.replace(bad, "", 1)
+    print("WXRESP2 (viejo) removido")
+
+if "WXRESPX" not in s:
     iseg = s.find(".method getResponseWithInterceptorChain()Lokhttp3/Response;")
     if iseg == -1:
-        print("metodo no encontrado; sin WXRESP2")
+        print("metodo no encontrado; sin WXRESPX")
     else:
         jend = s.find(".end method", iseg)
         seg = s[iseg:jend]
         k1 = seg.find("if-nez v1, :cond_1")
-        if k1 == -1:
-            print("if-nez no encontrado; sin WXRESP2")
+        k2 = seg.find("return-object v0", k1) if k1 != -1 else -1
+        if k2 == -1:
+            print("anchor no encontrado; sin WXRESPX")
         else:
-            k2 = seg.find("return-object v0", k1)
-            if k2 == -1:
-                print("return no encontrado; sin WXRESP2")
-            else:
-                inj = "    const-wide/32 v1, 0x10000\n    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;\n    move-result-object v1\n    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;\n    move-result-object v1\n    const-string v2, \"WXRESP2\"\n    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n"
-                seg = seg[:k2] + inj + seg[k2:]
-                s = s[:iseg] + seg + s[jend:]
-                print("patched WXRESP2 (simple)")
+            k2 = seg.rfind("\n", 0, k2) + 1
+            inj = """    # WXRESPX
+    :wxrx_s
+    const-string v1, "Content-Type"
+    invoke-virtual {v0, v1}, Lokhttp3/Response;->header(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v1
+    if-eqz v1, :wxrx_go
+    const-string v2, "json"
+    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    move-result v2
+    if-nez v2, :wxrx_go
+    const-string v2, "text"
+    invoke-virtual {v1, v2}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+    move-result v2
+    if-eqz v2, :wxrx_e
+    :wxrx_go
+    const-wide/32 v1, 0x10000
+    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokhttp3/ResponseBody;
+    move-result-object v1
+    invoke-virtual {v1}, Lokhttp3/ResponseBody;->string()Ljava/lang/String;
+    move-result-object v1
+    const-string v2, "WXRESPX"
+    invoke-virtual {v1}, Ljava/lang/String;->length()I
+    move-result v3
+    const/4 v4, 0x0
+    :wxrx_loop
+    if-ge v4, v3, :wxrx_e
+    add-int/lit16 v5, v4, 0xdac
+    invoke-static {v5, v3}, Ljava/lang/Math;->min(II)I
+    move-result v5
+    invoke-virtual {v1, v4, v5}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+    move-result-object v6
+    invoke-static {v2, v6}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    move v4, v5
+    goto :wxrx_loop
+    :wxrx_e
+    .catch Ljava/lang/Throwable; {:wxrx_s .. :wxrx_e} :wxrx_c
+    goto :wxrx_d
+    :wxrx_c
+    move-exception v1
+    :wxrx_d
+"""
+            seg = seg[:k2] + inj + seg[k2:]
+            s = s[:iseg] + seg + s[jend:]
+            print("patched WXRESPX")
+else:
+    print("WXRESPX ya presente")
 
 open(p, "w").write(s)
 EOF
