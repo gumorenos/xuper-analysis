@@ -37,7 +37,8 @@ find "$WORK/apk/res" -name '*$*' -exec bash -c 'mv "$1" "${1//\$/d_}"' _ {} \; 2
 grep -rl '\$' "$WORK/apk/res" --include='*.xml' | xargs -r sed -i 's/\$avd/d_avd/g; s/\$ic_launcher/d_ic_launcher/g' || true
 
 echo "[3/4] rebuild (aapt2 nativo)"
-java -jar "$APKTOOL" b --aapt "$AAPT2" "$WORK/apk" -o "$WORK/unsigned.apk" 2>&1 | tail -5
+java -jar "$APKTOOL" b --aapt "$AAPT2" "$WORK/apk" -o "$WORK/unsigned.apk" > "$WORK/build.log" 2>&1 || { tail -40 "$WORK/build.log"; exit 1; }
+tail -3 "$WORK/build.log"
 
 echo "[4/4] firma"
 KS="$WORK/debug.keystore"
