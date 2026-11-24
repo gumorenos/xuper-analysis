@@ -15,7 +15,7 @@ echo "[1/4] decode"
 java -jar "$APKTOOL" d -f -o "$WORK/apk" "$APK_IN" 2>&1 | tail -3
 
 echo "[1.5] patch smali"
-if [ -f "$(dirname "$0")/patch.sh" ]; then "$(dirname "$0")/patch.sh" "$WORK/apk"; fi
+if [ -f "$(dirname "$0")/patch.sh" ]; then bash "$(dirname "$0")/patch.sh" "$WORK/apk"; fi
 
 echo "[2/4] patch manifest + NSC"
 sed -i 's|<application|<application android:debuggable="true"|' "$WORK/apk/AndroidManifest.xml"
