@@ -56,5 +56,31 @@ if "WXURL" not in s:
 else:
     print("WXURL ya presente")
 
+# --- Patch 3: WXRESP (log de la respuesta del portal) ---
+if "WXRESP" not in s:
+    i = s.find(".method public intercept(Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;")
+    j = s.find(".end method", i)
+    seg = s[i:j]
+    anchor = "    invoke-interface {p1, v1}, Lokhttp3/Interceptor$Chain;->proceed(Lokhttp3/Request;)Lokhttp3/Response;"
+    k = seg.find(anchor)
+    if k != -1:
+        k2 = seg.find("move-result-object p1", k)
+        end = k2 + len("move-result-object p1")
+        inj = """
+    const-wide/16 v3, 0x10000
+    invoke-virtual {p1, v3, v4}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;
+    move-result-object v3
+    invoke-virtual {v3}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;
+    move-result-object v3
+    const-string v4, "WXRESP"
+    invoke-static {v4, v3}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I"""
+        seg = seg[:end] + inj + seg[end:]
+        s = s[:i] + seg + s[j:]
+        print("patched WXRESP")
+    else:
+        print("proceed no encontrado; sin WXRESP")
+else:
+    print("WXRESP ya presente")
+
 open(p, "w").write(s)
 EOF

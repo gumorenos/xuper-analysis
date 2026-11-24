@@ -119,8 +119,9 @@ def call(endpoint, payload=None):
         headers={
             "Content-Type": "application/json;charset=utf-8",
             "apk": "com.android.msandroid",
-            "apkVer": "43476",
-            "spkgVer": IDENTITY["sysVersion"],
+            "apkVer": "43404",
+            "spkgVer": "2025-11-06 18:02:55_34_14_",
+            "NoLog": "true",
             "User-Agent": "okhttp/4.9.3",
         })
     with urllib.request.urlopen(req, timeout=20) as r:
