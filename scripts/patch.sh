@@ -163,7 +163,7 @@ if "WXRESP2" not in s:
             if k2 == -1:
                 print("return no encontrado; sin WXRESP2")
             else:
-                inj = "    const-wide/16 v1, 0x10000\n    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;\n    move-result-object v1\n    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;\n    move-result-object v1\n    const-string v2, \"WXRESP2\"\n    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n"
+                inj = "    const-wide/32 v1, 0x10000\n    invoke-virtual {v0, v1, v2}, Lokhttp3/Response;->peekBody(J)Lokio/BufferedSource;\n    move-result-object v1\n    invoke-virtual {v1}, Lokio/BufferedSource;->readUtf8()Ljava/lang/String;\n    move-result-object v1\n    const-string v2, \"WXRESP2\"\n    invoke-static {v2, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I\n"
                 seg = seg[:k2] + inj + seg[k2:]
                 s = s[:iseg] + seg + s[jend:]
                 print("patched WXRESP2 (simple)")
