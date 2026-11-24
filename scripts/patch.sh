@@ -170,3 +170,21 @@ if "WXRESP2" not in s:
 
 open(p, "w").write(s)
 EOF
+
+# --- rb/a.smali: quitar NO_PROXY (usar proxy del sistema -> mitm posible) ---
+P="$APK/smali_classes2/rb/a.smali"
+[ -f "$P" ] || exit 0
+python3 - "$P" <<'PYEOF'
+import sys
+p = sys.argv[1]
+s = open(p).read()
+old = "    sget-object p1, Ljava/net/Proxy;->NO_PROXY:Ljava/net/Proxy;\n"
+if "WXNOPROXY" in s:
+    print("rb/a ya parcheado")
+elif old in s:
+    s = s.replace(old, "    const/4 p1, 0x0\n    # WXNOPROXY: usar proxy del sistema\n", 1)
+    open(p, "w").write(s)
+    print("patched WXNOPROXY (rb/a)")
+else:
+    print("NO_PROXY no encontrado en rb/a")
+PYEOF
