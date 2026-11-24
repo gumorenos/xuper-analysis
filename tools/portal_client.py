@@ -113,6 +113,7 @@ def call(endpoint, payload=None):
     body_obj.update(IDENTITY)
     js = json.dumps(body_obj, separators=(",", ":"), ensure_ascii=False).encode()
     ct = des3(False, pad(js))
+    # el app envia el body LIMPIO (sin identidad mergeada)
     req = urllib.request.Request(
         PORTAL + endpoint, data=hexenc(ct).encode(), method="POST",
         headers={
